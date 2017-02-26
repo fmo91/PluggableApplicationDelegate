@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1837D1BC1E620CAD007B3A99 /* LoggerApplicationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1837D1BB1E620CAD007B3A99 /* LoggerApplicationService.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -28,12 +29,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1837D1BB1E620CAD007B3A99 /* LoggerApplicationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerApplicationService.swift; sourceTree = "<group>"; };
 		2D6C3D35BF2386A555E97E61 /* Pods-PluggableApplicationDelegate_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluggableApplicationDelegate_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PluggableApplicationDelegate_Tests/Pods-PluggableApplicationDelegate_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		3452B0F8F97CEB00ACD499B9 /* Pods-PluggableApplicationDelegate_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluggableApplicationDelegate_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PluggableApplicationDelegate_Example/Pods-PluggableApplicationDelegate_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		3B64AB4D62E5F7AE04B2995F /* Pods_PluggableApplicationDelegate_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PluggableApplicationDelegate_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C07D992004BA73F2E4B91D9 /* Pods-PluggableApplicationDelegate_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluggableApplicationDelegate_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-PluggableApplicationDelegate_Example/Pods-PluggableApplicationDelegate_Example.release.xcconfig"; sourceTree = "<group>"; };
-		58106CACA3FB0C55BD04D374 /* PluggableApplicationDelegate.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = PluggableApplicationDelegate.podspec; path = ../PluggableApplicationDelegate.podspec; sourceTree = "<group>"; };
-		5884CAC61F8C394486D201FB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		58106CACA3FB0C55BD04D374 /* PluggableApplicationDelegate.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = PluggableApplicationDelegate.podspec; path = ../PluggableApplicationDelegate.podspec; sourceTree = "<group>"; };
+		5884CAC61F8C394486D201FB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* PluggableApplicationDelegate_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PluggableApplicationDelegate_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -46,7 +48,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		8D80C59340E099C607D20364 /* Pods-PluggableApplicationDelegate_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluggableApplicationDelegate_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PluggableApplicationDelegate_Tests/Pods-PluggableApplicationDelegate_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B6CECF7EAD6D5A936AF6141B /* Pods_PluggableApplicationDelegate_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PluggableApplicationDelegate_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E80DF0E13AD8B6534161C748 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		E80DF0E13AD8B6534161C748 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1837D1BA1E620C81007B3A99 /* Sample Services */ = {
+			isa = PBXGroup;
+			children = (
+				1837D1BB1E620CAD007B3A99 /* LoggerApplicationService.swift */,
+			);
+			name = "Sample Services";
+			sourceTree = "<group>";
+		};
 		43E05A061D839EB359901D2C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +114,7 @@
 		607FACD21AFB9204008FA782 /* Example for PluggableApplicationDelegate */ = {
 			isa = PBXGroup;
 			children = (
+				1837D1BA1E620C81007B3A99 /* Sample Services */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -361,6 +372,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1837D1BC1E620CAD007B3A99 /* LoggerApplicationService.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);

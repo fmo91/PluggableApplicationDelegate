@@ -1,0 +1,6 @@
+framework module PluggableApplicationDelegate {
+  umbrella header "PluggableApplicationDelegate-umbrella.h"
+
+  export *
+  module * { export * }
+}
