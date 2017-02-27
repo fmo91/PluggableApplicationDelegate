@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/PluggableApplicationDelegate.svg?style=flat)](http://cocoapods.org/pods/PluggableApplicationDelegate)
 
 ## Introduction
-`AppDelegate` is a traditional example of bad code. Lots of line codes that makes so much different things are put together in methods that are called within the application life cycle. But all of those concerns are over.
+`AppDelegate` is a traditional example of bad code. Lots of line of code that makes so much different things are put together in methods that are called within the application life cycle. But all of those concerns are over.
 Using `PluggableApplicationDelegate` you decouple AppDelegate from the services that you plug to it. Each `ApplicationService` has its own life cycle that is shared with `AppDelegate`. 
 
 ## At a glance
