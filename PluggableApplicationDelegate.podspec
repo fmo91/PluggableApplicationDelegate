@@ -9,16 +9,11 @@
 Pod::Spec.new do |s|
   s.name             = 'PluggableApplicationDelegate'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of PluggableApplicationDelegate.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.summary          = 'Services oriented AppDelegate in Swift 3.'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+PluggableApplicationDelegate is a way of decoupling AppDelegate, by splitting it into small modules called ApplicationService.
+Each ApplicationServices shares the life cycle with AppDelegate, and becomes its observer. Whenever AppDelegate runs any life cycle method, your Application services are notified and perform some action.
+PluggableApplicationDelegate is an open class from which your AppDelegate needs to inherit. Your AppDelegate then needs to override its `services` property, returning an ApplicationServices array.
                        DESC
 
   s.homepage         = 'https://github.com/fmo91/PluggableApplicationDelegate'
@@ -37,6 +32,6 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'UIKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
