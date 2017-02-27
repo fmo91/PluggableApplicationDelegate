@@ -54,7 +54,7 @@ Yes. That's all. Simple.
 
 ## How does this work?
 
-You may want to read my Medium post about Pluggable App Delegate.
+You may want to read my [Medium post about Pluggable App Delegate](https://medium.com/ios-os-x-development/pluggableapplicationdelegate-e50b2c5d97dd#.sz50l4d0l).
 Basically, you do an inversion of control. Instead of let AppDelegate instantiate your dependencies, perform actions at every step of its life cycle, you create objects that share the AppDelegate life cycle and plug them into your AppDelegate.
 Those objects are observers of the AppDelegate. Your AppDelegate has the only responsibility of notify them about its life cycle events.
 
