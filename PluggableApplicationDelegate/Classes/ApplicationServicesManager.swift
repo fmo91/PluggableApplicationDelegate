@@ -18,13 +18,9 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     public var window: UIWindow?
     
     open var services: [ApplicationService] { return [] }
-    private var _services: [ApplicationService]?
-    public var __services: [ApplicationService] {
-        if _services == nil {
-            _services = services
-        }
-        return _services!
-    }
+    private lazy var __services: [ApplicationService]! = {
+        return self.services
+    }()
     
     @available(iOS 2.0, *)
     public func applicationDidFinishLaunching(_ application: UIApplication) {
