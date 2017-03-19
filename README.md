@@ -72,7 +72,7 @@ PluggableApplicationDelegate is available through [CocoaPods](http://cocoapods.o
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "PluggableApplicationDelegate"
+pod "PluggableApplicationDelegate", :git => "https://github.com/fmo91/PluggableApplicationDelegate"
 ```
 
 ## Author
