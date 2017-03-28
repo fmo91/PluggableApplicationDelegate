@@ -44,7 +44,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 3.0, *)
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         for service in __services {
             if let serviceResult = service.application?(application, didFinishLaunchingWithOptions: launchOptions) {
                 if serviceResult == false {
