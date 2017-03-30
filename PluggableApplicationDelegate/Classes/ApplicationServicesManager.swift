@@ -154,7 +154,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     
     // This callback will be made upon calling -[UIApplication registerUserNotificationSettings:]. The settings the user has granted to the application will be passed in as the second argument.
-    @available(iOS 8.0, *)
+    @available(iOS, introduced: 8.0, deprecated: 10.0, message: "Use UserNotification UNNotification Settings instead")
     public func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
         for service in __services {
             service.application?(application, didRegister: notificationSettings)
