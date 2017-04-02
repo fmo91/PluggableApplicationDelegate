@@ -32,23 +32,27 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        var result = true
+        
         for service in __services {
             if let serviceResult = service.application?(application, willFinishLaunchingWithOptions: launchOptions) {
                 if serviceResult == false {
-                    return false
+                    result = false
                 }
             }
         }
         
-        return true
+        return result
     }
     
     @available(iOS 3.0, *)
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        var result = true
+        
         for service in __services {
             if let serviceResult = service.application?(application, didFinishLaunchingWithOptions: launchOptions) {
                 if serviceResult == false {
-                    return false
+                    result = false
                 }
             }
         }
@@ -73,9 +77,11 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 2.0, deprecated: 9.0, message: "Please use application:openURL:options:")
     public func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
+        var result = true
+        
         for service in __services {
             if service.application?(application, handleOpen: url) == false {
-                return false
+                result = false
             }
         }
         
@@ -84,9 +90,11 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 4.2, deprecated: 9.0, message: "Please use application:openURL:options:")
     public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        var result = true
+        
         for service in __services {
             if service.application?(application, open: url, sourceApplication: sourceApplication, annotation: annotation) == false {
-                return false
+                result = false
             }
         }
         
@@ -95,13 +103,15 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 9.0, *)
     public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        var result = true
+        
         for service in __services {
             if service.application?(app, open: url, options: options) == false {
-                return false
+                result = false
             }
         }
         
-        return true
+        return result
     }
     
     @available(iOS 2.0, *)
@@ -328,13 +338,15 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // If unimplemented, the default behavior is to allow the extension point identifier.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
+        var result = true
+        
         for service in __services {
             if service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) == false {
-                return false
+                result = false
             }
         }
         
-        return true
+        return result
     }
     
     
@@ -351,24 +363,28 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+        var result = false
+        
         for service in __services {
             if service.application?(application, shouldSaveApplicationState: coder) == true {
-                return true
+                result = true
             }
         }
         
-        return false
+        return result
     }
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        var result = false
+        
         for service in __services {
             if service.application?(application, shouldRestoreApplicationState: coder) == true {
-                return true
+                result = true
             }
         }
         
-        return false
+        return result
     }
     
     @available(iOS 6.0, *)
@@ -392,13 +408,15 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // or application:didFailToContinueUserActivityWithType:error: if an error was encountered.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
+        var result = false
+        
         for service in __services {
             if service.application?(application, willContinueUserActivityWithType: userActivityType) == true {
-                return true
+                result = true
             }
         }
         
-        return false
+        return result
     }
     
     
@@ -408,13 +426,15 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // restoreUserActivityState on all objects.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
+        var result = false
+        
         for service in __services {
             if service.application?(application, continue: userActivity, restorationHandler: restorationHandler) == true {
-                return true
+                return result
             }
         }
         
-        return false
+        return result
     }
     
     
@@ -424,8 +444,6 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         for service in __services {
             service.application?(application, didFailToContinueUserActivityWithType: userActivityType, error: error)
         }
-        
-        return
     }
     
     
@@ -435,8 +453,6 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         for service in __services {
             service.application?(application, didUpdate: userActivity)
         }
-        
-        return
     }
     
     
@@ -448,7 +464,5 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         for service in __services {
             service.application?(application, userDidAcceptCloudKitShareWith: cloudKitShareMetadata)
         }
-        
-        return
     }
 }
