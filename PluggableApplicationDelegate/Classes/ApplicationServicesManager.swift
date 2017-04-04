@@ -57,7 +57,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        return true
+        return result
     }
     
     
@@ -85,7 +85,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        return true
+        return result
     }
     
     @available(iOS, introduced: 4.2, deprecated: 9.0, message: "Please use application:openURL:options:")
@@ -98,7 +98,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        return true
+        return result
     }
     
     @available(iOS 9.0, *)
