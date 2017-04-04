@@ -430,7 +430,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         
         for service in __services {
             if service.application?(application, continue: userActivity, restorationHandler: restorationHandler) == true {
-                return result
+                result = false
             }
         }
         
