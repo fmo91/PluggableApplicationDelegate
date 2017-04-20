@@ -24,40 +24,24 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 2.0, *)
     public func applicationDidFinishLaunching(_ application: UIApplication) {
-        for service in __services {
-            service.applicationDidFinishLaunching?(application)
-        }
+        __services.forEach { $0.applicationDidFinishLaunching?(application) }
     }
     
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        var result = true
         
-        for service in __services {
-            if let serviceResult = service.application?(application, willFinishLaunchingWithOptions: launchOptions) {
-                if serviceResult == false {
-                    result = false
-                }
-            }
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(application, willFinishLaunchingWithOptions: launchOptions) ?? true)
         }
-        
-        return result
     }
     
     @available(iOS 3.0, *)
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        var result = true
-        
-        for service in __services {
-            if let serviceResult = service.application?(application, didFinishLaunchingWithOptions: launchOptions) {
-                if serviceResult == false {
-                    result = false
-                }
-            }
+
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(application, didFinishLaunchingWithOptions: launchOptions) ?? true)
         }
-        
-        return result
     }
     
     
@@ -77,41 +61,23 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 2.0, deprecated: 9.0, message: "Please use application:openURL:options:")
     public func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
-        var result = true
-        
-        for service in __services {
-            if service.application?(application, handleOpen: url) == false {
-                result = false
-            }
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(application, handleOpen: url) ?? true)
         }
-        
-        return result
     }
     
     @available(iOS, introduced: 4.2, deprecated: 9.0, message: "Please use application:openURL:options:")
     public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        var result = true
-        
-        for service in __services {
-            if service.application?(application, open: url, sourceApplication: sourceApplication, annotation: annotation) == false {
-                result = false
-            }
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(application, open: url, sourceApplication: sourceApplication, annotation: annotation) ?? true)
         }
-        
-        return result
     }
     
     @available(iOS 9.0, *)
     public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        var result = true
-        
-        for service in __services {
-            if service.application?(app, open: url, options: options) == false {
-                result = false
-            }
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(app, open: url, options: options) ?? true)
         }
-        
-        return result
     }
     
     @available(iOS 2.0, *)
@@ -338,15 +304,9 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // If unimplemented, the default behavior is to allow the extension point identifier.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
-        var result = true
-        
-        for service in __services {
-            if service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) == false {
-                result = false
-            }
+        return __services.reduce(true) { (previous, service) -> Bool in
+            previous && (service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) ?? true)
         }
-        
-        return result
     }
     
     
@@ -363,28 +323,16 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
-        var result = false
-        
-        for service in __services {
-            if service.application?(application, shouldSaveApplicationState: coder) == true {
-                result = true
-            }
+        return __services.reduce(false) { (previous, service) -> Bool in
+            previous || (service.application?(application, shouldSaveApplicationState: coder) ?? false)
         }
-        
-        return result
     }
     
     @available(iOS 6.0, *)
     public func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
-        var result = false
-        
-        for service in __services {
-            if service.application?(application, shouldRestoreApplicationState: coder) == true {
-                result = true
-            }
+        return __services.reduce(false) { (previous, service) -> Bool in
+            previous || (service.application?(application, shouldRestoreApplicationState: coder) ?? false)
         }
-        
-        return result
     }
     
     @available(iOS 6.0, *)
@@ -408,15 +356,9 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // or application:didFailToContinueUserActivityWithType:error: if an error was encountered.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
-        var result = false
-        
-        for service in __services {
-            if service.application?(application, willContinueUserActivityWithType: userActivityType) == true {
-                result = true
-            }
+        return __services.reduce(false) { (previous, service) -> Bool in
+            previous || (service.application?(application, willContinueUserActivityWithType: userActivityType) ?? false)
         }
-        
-        return result
     }
     
     
@@ -426,15 +368,9 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // restoreUserActivityState on all objects.
     @available(iOS 8.0, *)
     public func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
-        var result = false
-        
-        for service in __services {
-            if service.application?(application, continue: userActivity, restorationHandler: restorationHandler) == true {
-                result = false
-            }
+        return __services.reduce(false) { (previous, service) -> Bool in
+            previous || (service.application?(application, continue: userActivity, restorationHandler: restorationHandler) ?? false)
         }
-        
-        return result
     }
     
     
