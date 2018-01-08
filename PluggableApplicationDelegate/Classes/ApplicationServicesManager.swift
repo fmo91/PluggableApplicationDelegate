@@ -13,6 +13,12 @@ import CloudKit
 /// It doesn't add more functionalities yet.
 public protocol ApplicationService: UIApplicationDelegate {}
 
+extension ApplicationService {
+    public var window: UIWindow? {
+        return UIApplication.shared.delegate?.window ?? nil
+    }
+}
+
 open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     public var window: UIWindow?
