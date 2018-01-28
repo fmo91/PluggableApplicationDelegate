@@ -1,16 +1,16 @@
 PODS:
-  - PluggableApplicationDelegate (0.1.0)
+  - PluggableApplicationDelegate (0.2.0)
 
 DEPENDENCIES:
   - PluggableApplicationDelegate (from `../`)
 
 EXTERNAL SOURCES:
   PluggableApplicationDelegate:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  PluggableApplicationDelegate: 0182e5182367a3b01ad1d9afbb6a9e87741da429
+  PluggableApplicationDelegate: c8d30a300d1d3ed8e4f9ea75a795d6877a0c7da0
 
 PODFILE CHECKSUM: 3ff202d5d31bd2432018d06d2bac807ab4cf6077
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.4.0
