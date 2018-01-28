@@ -17,9 +17,8 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     public var window: UIWindow?
     
-    open var services: [ApplicationService] { return [] }
-    private lazy var __services: [ApplicationService] = {
-        return self.services
+    private(set) lazy var services: [ApplicationService] = {
+        return [ /* Populated from sub-class */ ]
     }()
     
     
@@ -29,7 +28,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         var results: [T] = []
         var returns: [S] = []
         
-        for service in __services {
+        for service in services {
             dispatchGroup.enter()
             let returned = work(service, { result in
                 results.append(result)
@@ -54,14 +53,14 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 2.0, *)
     open func applicationDidFinishLaunching(_ application: UIApplication) {
-        __services.forEach { $0.applicationDidFinishLaunching?(application) }
+        services.forEach { $0.applicationDidFinishLaunching?(application) }
     }
     
     
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, willFinishLaunchingWithOptions: launchOptions) ?? false {
                 result = true
             }
@@ -72,7 +71,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 3.0, *)
     open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, didFinishLaunchingWithOptions: launchOptions) ?? false {
                 result = true
             }
@@ -83,14 +82,14 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 2.0, *)
     open func applicationDidBecomeActive(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationDidBecomeActive?(application)
         }
     }
     
     @available(iOS 2.0, *)
     open func applicationWillResignActive(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationWillResignActive?(application)
         }
     }
@@ -98,7 +97,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS, introduced: 2.0, deprecated: 9.0, message: "Please use application:openURL:options:")
     open func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, handleOpen: url) ?? false {
                 result = true
             }
@@ -109,7 +108,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS, introduced: 4.2, deprecated: 9.0, message: "Please use application:openURL:options:")
     open func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, open: url, sourceApplication: sourceApplication, annotation: annotation) ?? false {
                 result = true
             }
@@ -120,7 +119,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 9.0, *)
     open func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(app, open: url, options: options) ?? false {
                 result = true
             }
@@ -130,21 +129,21 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 2.0, *)
     open func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationDidReceiveMemoryWarning?(application)
         }
     }
     
     @available(iOS 2.0, *)
     open func applicationWillTerminate(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationWillTerminate?(application)
         }
     }
     
     @available(iOS 2.0, *)
     open func applicationSignificantTimeChange(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationSignificantTimeChange?(application)
         }
     }
@@ -152,26 +151,26 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 2.0, *)
     open func application(_ application: UIApplication, willChangeStatusBarOrientation newStatusBarOrientation: UIInterfaceOrientation, duration: TimeInterval) {
-        for service in __services {
+        for service in services {
             service.application?(application, willChangeStatusBarOrientation: newStatusBarOrientation, duration: duration)
         }
     }
     
     @available(iOS 2.0, *)
     open func application(_ application: UIApplication, didChangeStatusBarOrientation oldStatusBarOrientation: UIInterfaceOrientation) {
-        for service in __services {
+        for service in services {
             service.application?(application, didChangeStatusBarOrientation: oldStatusBarOrientation)
         }
     }
     
 //    open func application(_ application: UIApplication, willChangeStatusBarFrame newStatusBarFrame: CGRect) {
-//        for service in __services {
+//        for service in services {
 //            service.application?(application, willChangeStatusBarFrame: newStatusBarFrame)
 //        }
 //    }
 //
 //    open func application(_ application: UIApplication, didChangeStatusBarFrame oldStatusBarFrame: CGRect) {
-//        for service in __services {
+//        for service in services {
 //            service.application?(application, didChangeStatusBarFrame: oldStatusBarFrame)
 //        }
 //    }
@@ -180,7 +179,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // This callback will be made upon calling -[UIApplication registerUserNotificationSettings:]. The settings the user has granted to the application will be passed in as the second argument.
     @available(iOS, introduced: 8.0, deprecated: 10.0, message: "Use UserNotification UNNotification Settings instead")
     open func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        for service in __services {
+        for service in services {
             service.application?(application, didRegister: notificationSettings)
         }
     }
@@ -188,7 +187,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 3.0, *)
     open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        for service in __services {
+        for service in services {
             service.application?(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
         }
     }
@@ -196,7 +195,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 3.0, *)
     open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        for service in __services {
+        for service in services {
             service.application?(application, didFailToRegisterForRemoteNotificationsWithError: error)
         }
     }
@@ -204,7 +203,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 3.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate willPresentNotification:withCompletionHandler:] or -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:] for user visible notifications and -[UIApplicationDelegate application:didReceiveRemoteNotification:fetchCompletionHandler:] for silent remote notifications")
     open func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
-        for service in __services {
+        for service in services {
             service.application?(application, didReceiveRemoteNotification: userInfo)
         }
     }
@@ -212,7 +211,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 4.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate willPresentNotification:withCompletionHandler:] or -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
-        for service in __services {
+        for service in services {
             service.application?(application, didReceive: notification)
         }
     }
@@ -321,7 +320,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 8.2, *)
     open func application(_ application: UIApplication, handleWatchKitExtensionRequest userInfo: [AnyHashable : Any]?, reply: @escaping ([AnyHashable : Any]?) -> Swift.Void) {
-        for service in __services {
+        for service in services {
             service.application?(application, handleWatchKitExtensionRequest: userInfo, reply: reply)
         }
         apply({ (service, reply) -> Void? in
@@ -341,7 +340,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 9.0, *)
     open func applicationShouldRequestHealthAuthorization(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationShouldRequestHealthAuthorization?(application)
         }
     }
@@ -349,14 +348,14 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 4.0, *)
     open func applicationDidEnterBackground(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationDidEnterBackground?(application)
         }
     }
     
     @available(iOS 4.0, *)
     open func applicationWillEnterForeground(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationWillEnterForeground?(application)
         }
     }
@@ -364,14 +363,14 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 4.0, *)
     open func applicationProtectedDataWillBecomeUnavailable(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationProtectedDataWillBecomeUnavailable?(application)
         }
     }
     
     @available(iOS 4.0, *)
     open func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
-        for service in __services {
+        for service in services {
             service.applicationProtectedDataDidBecomeAvailable?(application)
         }
     }
@@ -383,7 +382,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 8.0, *)
     open func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) ?? true {
                 result = true
             }
@@ -394,7 +393,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
-        for service in __services {
+        for service in services {
             if let viewController = service.application?(application, viewControllerWithRestorationIdentifierPath: identifierComponents, coder: coder) {
                 return viewController
             }
@@ -406,7 +405,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, shouldSaveApplicationState: coder) ?? false {
                 result = true
             }
@@ -417,7 +416,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, shouldRestoreApplicationState: coder) ?? false {
                 result = true
             }
@@ -427,14 +426,14 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
-        for service in __services {
+        for service in services {
             service.application?(application, willEncodeRestorableStateWith: coder)
         }
     }
     
     @available(iOS 6.0, *)
     open func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-        for service in __services {
+        for service in services {
             service.application?(application, didDecodeRestorableStateWith: coder)
         }
     }
@@ -447,7 +446,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 8.0, *)
     open func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
         var result = false
-        for service in __services {
+        for service in services {
             if service.application?(application, willContinueUserActivityWithType: userActivityType) ?? false {
                 result = true
             }
@@ -476,7 +475,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // If the user activity cannot be fetched after willContinueUserActivityWithType is called, this will be called on the main thread when implemented.
     @available(iOS 8.0, *)
     open func application(_ application: UIApplication, didFailToContinueUserActivityWithType userActivityType: String, error: Error) {
-        for service in __services {
+        for service in services {
             service.application?(application, didFailToContinueUserActivityWithType: userActivityType, error: error)
         }
     }
@@ -485,7 +484,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // This is called on the main thread when a user activity managed by UIKit has been updated. You can use this as a last chance to add additional data to the userActivity.
     @available(iOS 8.0, *)
     open func application(_ application: UIApplication, didUpdate userActivity: NSUserActivity) {
-        for service in __services {
+        for service in services {
             service.application?(application, didUpdate: userActivity)
         }
     }
@@ -496,7 +495,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // the resulting CKShare and its associated record(s), which will appear in the CKContainer's shared database in a zone matching that of the record's owner.
     @available(iOS 10.0, *)
     open func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
-        for service in __services {
+        for service in services {
             service.application?(application, userDidAcceptCloudKitShareWith: cloudKitShareMetadata)
         }
     }

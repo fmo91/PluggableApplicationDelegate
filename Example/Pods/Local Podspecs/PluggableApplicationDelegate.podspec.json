@@ -1,8 +1,8 @@
 {
   "name": "PluggableApplicationDelegate",
-  "version": "0.1.0",
-  "summary": "A short description of PluggableApplicationDelegate.",
-  "description": "TODO: Add long description of the pod here.",
+  "version": "0.2.0",
+  "summary": "Services oriented AppDelegate in Swift 3.",
+  "description": "PluggableApplicationDelegate is a way of decoupling AppDelegate, by splitting it into small modules called ApplicationService.\nEach ApplicationServices shares the life cycle with AppDelegate, and becomes its observer. Whenever AppDelegate runs any life cycle method, your Application services are notified and perform some action.\nPluggableApplicationDelegate is an open class from which your AppDelegate needs to inherit. Your AppDelegate then needs to override its `services` property, returning an ApplicationServices array.",
   "homepage": "https://github.com/fmo91/PluggableApplicationDelegate",
   "license": {
     "type": "MIT",
@@ -13,10 +13,11 @@
   },
   "source": {
     "git": "https://github.com/fmo91/PluggableApplicationDelegate.git",
-    "tag": "0.1.0"
+    "tag": "0.2.0"
   },
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "PluggableApplicationDelegate/Classes/**/*"
+  "source_files": "PluggableApplicationDelegate/Classes/**/*",
+  "frameworks": "UIKit"
 }

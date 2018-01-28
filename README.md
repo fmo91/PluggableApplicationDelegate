@@ -42,11 +42,11 @@ import PluggableApplicationDelegate
 @UIApplicationMain
 class AppDelegate: PluggableApplicationDelegate {
     
-    override var services: [ApplicationService] {
+    override lazy var services: [ApplicationService] = {
         return [
             LoggerApplicationService()
         ]
-    }
+    }()
 }
 ```
 
