@@ -95,28 +95,6 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    @available(iOS, introduced: 2.0, deprecated: 9.0, message: "Please use application:openURL:options:")
-    open func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
-        var result = false
-        for service in __services {
-            if service.application?(application, handleOpen: url) ?? false {
-                result = true
-            }
-        }
-        return result
-    }
-    
-    @available(iOS, introduced: 4.2, deprecated: 9.0, message: "Please use application:openURL:options:")
-    open func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        var result = false
-        for service in __services {
-            if service.application?(application, open: url, sourceApplication: sourceApplication, annotation: annotation) ?? false {
-                result = true
-            }
-        }
-        return result
-    }
-    
     @available(iOS 9.0, *)
     open func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         var result = false
