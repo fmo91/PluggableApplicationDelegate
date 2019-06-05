@@ -59,7 +59,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     
     @available(iOS 6.0, *)
-    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, willFinishLaunchingWithOptions: launchOptions) ?? false {
@@ -70,7 +70,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 3.0, *)
-    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, didFinishLaunchingWithOptions: launchOptions) ?? false {
@@ -118,7 +118,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 9.0, *)
-    open func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         var result = false
         for service in __services {
             if service.application?(app, open: url, options: options) ?? false {
@@ -224,7 +224,10 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS, introduced: 8.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, completionHandler: @escaping () -> Swift.Void) {
         apply({ (service, completion) -> Void? in
-            service.application?(application, handleActionWithIdentifier: identifier, for: notification, completionHandler: completion)
+            service.application?(application,
+                                 handleActionWithIdentifier: identifier,
+                                 for: notification,
+                                 completionHandler: { completion(completionHandler) })
         }, completionHandler: { _ in
             completionHandler()
         })
@@ -233,8 +236,12 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 9.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], withResponseInfo responseInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
-        apply({ (service, completionHandler) -> Void? in
-            service.application?(application, handleActionWithIdentifier: identifier, forRemoteNotification: userInfo, withResponseInfo: responseInfo, completionHandler: completionHandler)
+        apply({ (service, handler) -> Void? in
+            service.application?(application,
+                                 handleActionWithIdentifier: identifier,
+                                 forRemoteNotification: userInfo,
+                                 withResponseInfo: responseInfo,
+                                 completionHandler: { handler(completionHandler) })
         }, completionHandler: { _ in
             completionHandler()
         })
@@ -246,8 +253,11 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // You should call the completion handler as soon as you've finished handling the action.
     @available(iOS, introduced: 8.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
-        apply({ (service, completionHandler) -> Void? in
-            service.application?(application, handleActionWithIdentifier: identifier, forRemoteNotification: userInfo, completionHandler: completionHandler)
+        apply({ (service, handler) -> Void? in
+            service.application?(application,
+                                 handleActionWithIdentifier: identifier,
+                                 forRemoteNotification: userInfo,
+                                 completionHandler: { handler(completionHandler) })
         }, completionHandler: { _ in
             completionHandler()
         })
@@ -256,8 +266,12 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     @available(iOS, introduced: 9.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, withResponseInfo responseInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
-        apply({ (service, completionHandler) -> Void? in
-            service.application?(application, handleActionWithIdentifier: identifier, for: notification, withResponseInfo: responseInfo, completionHandler: completionHandler)
+        apply({ (service, handler) -> Void? in
+            service.application?(application,
+                                 handleActionWithIdentifier: identifier,
+                                 for: notification,
+                                 withResponseInfo: responseInfo,
+                                 completionHandler: { handler(completionHandler) })
         }, completionHandler: { _ in
             completionHandler()
         })
@@ -310,14 +324,15 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // callbacks. If such a session has already been created (if the app is being resumed, for instance), then the delegate will start receiving
     // callbacks without any action by the application. You should call the completionHandler as soon as you're finished handling the callbacks.
     @available(iOS 7.0, *)
-    open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Swift.Void) {
-        apply({ (service, completionHandler) -> Void? in
-            service.application?(application, handleEventsForBackgroundURLSession: identifier, completionHandler: completionHandler)
+    open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        apply({ (service, handler) -> Void? in
+            service.application?(application, handleEventsForBackgroundURLSession: identifier, completionHandler: {
+                handler(completionHandler)
+            })
         }, completionHandler: { _ in
             completionHandler()
         })
     }
-    
     
     @available(iOS 8.2, *)
     open func application(_ application: UIApplication, handleWatchKitExtensionRequest userInfo: [AnyHashable : Any]?, reply: @escaping ([AnyHashable : Any]?) -> Swift.Void) {
@@ -381,7 +396,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // Constants representing common extension point identifiers are provided further down.
     // If unimplemented, the default behavior is to allow the extension point identifier.
     @available(iOS 8.0, *)
-    open func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
+    open func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) ?? true {
@@ -393,13 +408,12 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     
     @available(iOS 6.0, *)
-    open func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
+    open func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
         for service in __services {
             if let viewController = service.application?(application, viewControllerWithRestorationIdentifierPath: identifierComponents, coder: coder) {
                 return viewController
             }
         }
-        
         return nil
     }
     
@@ -461,7 +475,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // invoked with the user activity. Invoking the restorationHandler is optional. It may be copied and invoked later, and it will bounce to the main thread to complete its work and call
     // restoreUserActivityState on all objects.
     @available(iOS 8.0, *)
-    open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
+    open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         let returns = apply({ (service, restorationHandler) -> Bool? in
             service.application?(application, continue: userActivity, restorationHandler: restorationHandler)
         }, completionHandler: { results in
@@ -471,7 +485,6 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         
         return returns.reduce(false, { $0 || $1 })
     }
-    
     
     // If the user activity cannot be fetched after willContinueUserActivityWithType is called, this will be called on the main thread when implemented.
     @available(iOS 8.0, *)
@@ -495,7 +508,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // You should use the CKShareMetadata object's shareURL and containerIdentifier to schedule a CKAcceptSharesOperation, then start using
     // the resulting CKShare and its associated record(s), which will appear in the CKContainer's shared database in a zone matching that of the record's owner.
     @available(iOS 10.0, *)
-    open func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
+    open func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         for service in __services {
             service.application?(application, userDidAcceptCloudKitShareWith: cloudKitShareMetadata)
         }
