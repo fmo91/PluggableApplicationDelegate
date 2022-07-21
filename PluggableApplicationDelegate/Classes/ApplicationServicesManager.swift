@@ -22,9 +22,31 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
         return self.services
     }()
     
+    @discardableResult
+    private func apply<S>(_ work: (_ service: ApplicationService, _ intermidiateCompletionHandler: @escaping () -> Void) -> S?, completionHandler: @escaping () -> Swift.Void) -> [S] {
+        let dispatchGroup = DispatchGroup()
+        var returns: [S] = []
+        
+        for service in __services {
+            let returned = work(service, {})
+            if let returned = returned {
+                returns.append(returned)
+            } else { // delegate doesn't impliment method
+                dispatchGroup.leave()
+            }
+            if returned == nil {
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completionHandler()
+        }
+        
+        return returns
+    }
     
     @discardableResult
-    private func apply<T, S>(_ work: (ApplicationService, @escaping (T) -> Void) -> S?, completionHandler: @escaping ([T]) -> Swift.Void) -> [S] {
+    private func apply<T, S>(_ work: (_ service: ApplicationService, _ intermidiateCompletionHandler: @escaping (T) -> Void) -> S?, completionHandler: @escaping ([T]) -> Swift.Void) -> [S] {
         let dispatchGroup = DispatchGroup()
         var results: [T] = []
         var returns: [S] = []
@@ -59,7 +81,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     
     @available(iOS 6.0, *)
-    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, willFinishLaunchingWithOptions: launchOptions) ?? false {
@@ -70,7 +92,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 3.0, *)
-    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, didFinishLaunchingWithOptions: launchOptions) ?? false {
@@ -118,7 +140,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 9.0, *)
-    open func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         var result = false
         for service in __services {
             if service.application?(app, open: url, options: options) ?? false {
@@ -223,9 +245,9 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // You should call the completion handler as soon as you've finished handling the action.
     @available(iOS, introduced: 8.0, deprecated: 10.0, message: "Use UserNotifications Framework's -[UNUserNotificationCenterDelegate didReceiveNotificationResponse:withCompletionHandler:]")
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, completionHandler: @escaping () -> Swift.Void) {
-        apply({ (service, completion) -> Void? in
-            service.application?(application, handleActionWithIdentifier: identifier, for: notification, completionHandler: completion)
-        }, completionHandler: { _ in
+        apply({ (service, intermidiateCompletionHandler) in
+            service.application?(application, handleActionWithIdentifier: identifier, for: notification, completionHandler: intermidiateCompletionHandler)
+        }, completionHandler: {
             completionHandler()
         })
     }
@@ -235,7 +257,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], withResponseInfo responseInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
         apply({ (service, completionHandler) -> Void? in
             service.application?(application, handleActionWithIdentifier: identifier, forRemoteNotification: userInfo, withResponseInfo: responseInfo, completionHandler: completionHandler)
-        }, completionHandler: { _ in
+        }, completionHandler: {
             completionHandler()
         })
     }
@@ -248,7 +270,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
         apply({ (service, completionHandler) -> Void? in
             service.application?(application, handleActionWithIdentifier: identifier, forRemoteNotification: userInfo, completionHandler: completionHandler)
-        }, completionHandler: { _ in
+        }, completionHandler: {
             completionHandler()
         })
     }
@@ -258,7 +280,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     open func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, withResponseInfo responseInfo: [AnyHashable : Any], completionHandler: @escaping () -> Swift.Void) {
         apply({ (service, completionHandler) -> Void? in
             service.application?(application, handleActionWithIdentifier: identifier, for: notification, withResponseInfo: responseInfo, completionHandler: completionHandler)
-        }, completionHandler: { _ in
+        }, completionHandler: {
             completionHandler()
         })
     }
@@ -313,7 +335,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     open func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Swift.Void) {
         apply({ (service, completionHandler) -> Void? in
             service.application?(application, handleEventsForBackgroundURLSession: identifier, completionHandler: completionHandler)
-        }, completionHandler: { _ in
+        }, completionHandler: {
             completionHandler()
         })
     }
@@ -381,7 +403,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // Constants representing common extension point identifiers are provided further down.
     // If unimplemented, the default behavior is to allow the extension point identifier.
     @available(iOS 8.0, *)
-    open func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
+    open func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier) -> Bool {
         var result = false
         for service in __services {
             if service.application?(application, shouldAllowExtensionPointIdentifier: extensionPointIdentifier) ?? true {
@@ -393,7 +415,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     
     
     @available(iOS 6.0, *)
-    open func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
+    open func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
         for service in __services {
             if let viewController = service.application?(application, viewControllerWithRestorationIdentifierPath: identifierComponents, coder: coder) {
                 return viewController
@@ -461,7 +483,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // invoked with the user activity. Invoking the restorationHandler is optional. It may be copied and invoked later, and it will bounce to the main thread to complete its work and call
     // restoreUserActivityState on all objects.
     @available(iOS 8.0, *)
-    open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Swift.Void) -> Bool {
+    open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         let returns = apply({ (service, restorationHandler) -> Bool? in
             service.application?(application, continue: userActivity, restorationHandler: restorationHandler)
         }, completionHandler: { results in
@@ -495,7 +517,7 @@ open class PluggableApplicationDelegate: UIResponder, UIApplicationDelegate {
     // You should use the CKShareMetadata object's shareURL and containerIdentifier to schedule a CKAcceptSharesOperation, then start using
     // the resulting CKShare and its associated record(s), which will appear in the CKContainer's shared database in a zone matching that of the record's owner.
     @available(iOS 10.0, *)
-    open func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
+    open func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         for service in __services {
             service.application?(application, userDidAcceptCloudKitShareWith: cloudKitShareMetadata)
         }
